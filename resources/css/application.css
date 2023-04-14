@@ -1,0 +1,66 @@
+/*去掉item虚线边框*/
+QListWidget, QListView, QTreeWidget, QTreeView {
+    outline: 0px;
+}
+/*设置左侧选项的最小最大宽度,文字颜色和背景颜色*/
+QListWidget {
+    min-width: 150px;
+    /*max-width: 200px;*/
+    color: white;
+    background: black;
+}
+
+/*被选中时的背景颜色和左边框颜色*/
+QListWidget::item:selected {
+    background: rgb(52, 52, 52);
+    border-left: 2px solid rgb(9, 187, 7);
+	color: white;
+}
+/*鼠标悬停颜色*/
+HistoryPanel::item:hover {
+    background: rgb(52, 52, 52);
+}
+
+QPushButton {
+    min-width: 120px;
+    color: white;
+}
+
+/*右侧的层叠窗口的背景颜色*/
+/*QStackedWidget {*/
+/*    background: rgb(30, 30, 30);*/
+/*}*/
+/*模拟的页面*/
+/*QLabel {*/
+/*    color: white;*/
+/*}*/
+QTabWidget::pane /* The tab widget frame */
+{
+	top:50px;
+	border:none;
+}
+
+
+QTabBar::tab:selected, QTabBar::tab:hover
+{
+	color:rgb(9, 187, 7);
+	background:transparent;
+
+
+
+	/*border-bottom:2px solid rgb(9, 187, 7);*/
+}
+
+QTabWidget::tab-bar {  		/*整个最上面的tab栏*/
+    alignment: left;
+	top:10px;
+	left:30px;
+
+}
+
+
+#detailWgt, #appealReasonWgt	/*设置下面的单个widget没有边框*/
+{
+	border:none;
+}
+
