@@ -338,10 +338,16 @@ class LabelFreePhoWidget(QWidget):
             gol.set_value("label_free_pho_org_type", enrichOrgType)
             gol.set_value("label_free_pho_gene_type", enrichGeneType)
         # 更新流程图，没有新建线程
-        flowchart_path = label_free_pho_flowchart()
-        self.item.setPixmap(scale_flowchart_png(flowchart_path))
-        self.resultEdit.append(str(self.step) + ".更新流程图成功！")
-        self.step += 1
+        try:
+            flowchart_path = label_free_pho_flowchart()
+            self.item.setPixmap(scale_flowchart_png(flowchart_path))
+            self.resultEdit.append(str(self.step) + ".更新流程图成功！")
+            self.step += 1
+        except Exception as e:
+            from util.Logger import logger
+            logger.error("更新流程图失败", e)
+            QMessageBox.warning(self, "更新流程图失败", "graphviz软件未安装成功")
+
         self.resultEdit.append(str(self.step) + ".数据分析中...")
         self.main_thread = LabelFreePhoQThread()
         self.main_thread.error_trigger.connect(self.error_display)

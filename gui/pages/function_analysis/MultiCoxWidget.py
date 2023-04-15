@@ -233,10 +233,14 @@ class MultiCoxWidget(QWidget):
             if_lasso = self.cb_lasso.isChecked()
             gol.set_value("multicox_if_enrich", if_lasso)
             # 更新流程图，没有新建线程
-            flowchart_path = cox_flowchart()
-            self.item.setPixmap(scale_flowchart_png(flowchart_path))
-            self.resultEdit.append(str(self.step) + ".更新流程图成功！")
-            self.step += 1
+            try:
+                flowchart_path = cox_flowchart()
+                self.item.setPixmap(scale_flowchart_png(flowchart_path))
+                self.resultEdit.append(str(self.step) + ".更新流程图成功！")
+                self.step += 1
+            except Exception as e:
+                logger.error("更新流程图失败", e)
+                QMessageBox.warning(self, "更新流程图失败", "graphviz软件未安装成功")
             self.resultEdit.append(str(self.step) + ".数据分析中...")
             self.main_thread = MultiCoxQThread()
             self.main_thread.error_trigger.connect(self.error_display)
