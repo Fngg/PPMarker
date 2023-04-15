@@ -83,7 +83,10 @@ python3 main.py
 
 - 本项目支持在linux下运行
 - 请安装Linux系统对应的Graphviz软件和R运行环境及相关依赖包
-- 请下载本仓库代码安装依赖并运行，如上面第三点所示
+- 下载PPMarker有两种方式
+    1. 源码下载：请下载本仓库代码安装依赖并运行，如上面第三点所示
+    2. 打包后的软件下载：（仅Unbuntu操作系统）在本仓库的发行版release中有Unbuntu_PPMarker_without_R.zip
+文件；百度网盘下载链接: https://pan.baidu.com/s/1DDjUxDVZDLYFsTo0F5DW6Q?pwd=16p5 提取码: 16p5。
 
 > 由于linux发行版本特别多，软件安装包方式不统一。建议直接下载源码按上述方式运行即可。
 
@@ -91,7 +94,11 @@ python3 main.py
 
 - 本项目支持在MacOS下运行
 - 请安装MacOS系统对应的Graphviz软件和R运行环境及相关依赖包
-- 请下载本仓库代码安装依赖并运行，如上面第三点所示
+- 下载PPMarker有两种方式
+    1. 源码下载：请下载本仓库代码安装依赖并运行，如上面第三点所示。
+    2. 打包后的软件下载：（仅Macos的intel芯片版本）在本仓库的发行版release中有MacOS_PPMarker_without_R.zip
+文件；百度网盘下载链接: https://pan.baidu.com/s/1XGU9YcxNTqRWwLi5ARDiDw?pwd=xdya 提取码: xdya。
+
 
 > 由于macos有intel和arm两种芯片版本，软件安装包方式不统一。建议直接下载源码按上述方式运行即可。
 
