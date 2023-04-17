@@ -28,13 +28,13 @@ PPMarker平台
 
 https://graphviz.org/download/
 
-通过[Graphviz的官方下载路径](https://graphviz.org/download/) 下载相应操作系统对应的版本并安装，安装好后将Graphviz中的bin路径添加到环境变量中。
+Graphviz 的官方下载路径：https://graphviz.org/download/ ，下载相应操作系统对应的版本并安装，如果是 Windows 操作系统还需要将安装好后的Graphviz中的 bin 路径添加到环境变量中。
 
 ## 2. 安装R语言并下载相关依赖包        
 
 https://cran.r-project.org/
 
-- R语言的版本应该为4.x.x, PPMarker开发环境中R对应的版本为R 4.2.1; 安装R语言后将安装路径添加到系统环境变量中。
+- 推荐 R 语言的版本为 4.x.x，在 PPMarker 平台的开发环境中使用到的 R 语言版本为 4.2.1。如果是Windows操作系统还需要将安装路径添加到环境变量中。
 - PPMarker中使用到的R相关的依赖包如下：
 ```text
 survival、ggplot2、grid、stringr、glmnet、survminer、pheatmap、timeROC、org.Hs.eg.db、clusterProfiler、
@@ -44,8 +44,7 @@ enrichplot、dplyr、data.table、org.Mm.eg.db、GOplot、ComplexHeatmap、tidyv
 # 三、下载PPMarker仓库代码并运行
 ## 1. 安装上述的Graphviz软件和R运行环境
 ## 2. 安装Python运行环境
-推荐使用Python3.9，PPMarker开发环境中Python对应的版本为3.9。
-下载地址： https://www.python.org/
+推荐 Python 版本为 3.8 及以上，PPMarker 的开发环境中使用到的 Python 版本为 3.9，Python 官方下载路径：https://www.python.org/
     
 ## 3. 下载PPMarker仓库代码
 ```shell
@@ -54,7 +53,7 @@ git clone https://gitee.com/liliecnu/ppmarker.git # gitee
 ```
 > 需要安装git，或者直接在网页界面以zip方式下载源码。
 
-## 4. 下载项目的python依赖包
+## 4. 下载安装项目的python依赖包
 
 ```shell
 pip3 install -r requirement.txt -i http://pypi.douban.com/simple/ --trusted-host=pypi.douban.com/simple
@@ -67,6 +66,10 @@ python3 main.py
 
 # 四、打包好的PPMarker软件下载
 
+本平台采用的程序语言 Python 和 R 都是跨平台的语言，它们可以在多种操
+作系统上运行，包括 Windows、Linux、MacOS 等常见的操作系统，所以本平台
+PPMarker 也支持以上三种操作系统。
+
 ## Windows 系统           
 
 - 如果您的系统中已经安装了R语言和相关依赖包，请下载"windows64_PPMarker_without_R.zip"。两种下载方式如下：                
@@ -74,7 +77,9 @@ python3 main.py
     2. 百度网盘下载链接: https://pan.baidu.com/s/1GyP5Kngk_eML94aXRflYAQ?pwd=axt4 提取码: axt4；
 - 若您的系统中没有安装R语言和相关依赖包，请下载"windows64_PPMarker_with_R.zip",两种下载方式如下：  
     1. 在本仓库的发行版release中有windows64_PPMarker_without_R.zip文件；          
-    2. 百度网盘下载链接: https://pan.baidu.com/s/1_dRi1xjzRI0Qs7GHyIauMg?pwd=kjs2 提取码: kjs2。             
+    2. 百度网盘下载链接: https://pan.baidu.com/s/1_dRi1xjzRI0Qs7GHyIauMg?pwd=kjs2 提取码: kjs2。          
+
+下载后解压缩，点击文件夹中的 PPMarker.exe 文件即可运行。
 
 >（注：无需提前安装Graphviz软件，在PPMarker安装包中已经集成Graphviz软件！）
 
@@ -88,6 +93,8 @@ python3 main.py
     2. 打包后的软件下载：（仅Ubuntu操作系统）在本仓库的发行版release中有Ubuntu_PPMarker_without_R.zip
 文件；百度网盘下载链接: https://pan.baidu.com/s/1DDjUxDVZDLYFsTo0F5DW6Q?pwd=16p5 提取码: 16p5。
 
+下载后解压缩，点击文件夹中的 PPMarker 文件即可运行
+
 > 由于linux发行版本特别多，软件安装包方式不统一。建议直接下载源码按上述方式运行即可。
 
 ## MacOS系统
@@ -99,6 +106,7 @@ python3 main.py
     2. 打包后的软件下载：（仅Macos的intel芯片版本）在本仓库的发行版release中有MacOS_PPMarker_without_R.zip
 文件；百度网盘下载链接: https://pan.baidu.com/s/1XGU9YcxNTqRWwLi5ARDiDw?pwd=xdya 提取码: xdya。
 
+下载后解压缩，点击文件夹中的 PPMarker 文件即可运行。
 
 > 由于macos有intel和arm两种芯片版本，软件安装包方式不统一。建议直接下载源码按上述方式运行即可。
 
