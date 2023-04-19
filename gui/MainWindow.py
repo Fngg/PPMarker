@@ -42,7 +42,7 @@ class MainWindow(QWidget):
         self.stackedWidget = QStackedWidget(self)
         splitter1.addWidget(self.stackedWidget)
 
-        splitter1.setSizes([gol.get_value("window_width")*0.14, gol.get_value("window_width")*0.85])
+        splitter1.setSizes([int(gol.get_value("window_width")*0.14), int(gol.get_value("window_width")*0.85)])
         layout.addWidget(splitter1)
 
 

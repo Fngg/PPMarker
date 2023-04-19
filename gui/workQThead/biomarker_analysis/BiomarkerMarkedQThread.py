@@ -70,7 +70,12 @@ class BiomarkerMarkedQThread(QThread):
             # self.exc_traceback = ''.join(traceback.format_exception(*sys.exc_info()))
             msg = repr(e)
             if "Permission" in msg:
-                msg = "生成的excel结果文件已经打开，请先关闭excel文件"
+                if ".xlsx" in str(e):
+                    msg = "生成的excel结果文件已经打开，请先关闭excel文件"
+                elif ".pdf" in str(e):
+                    msg = "生成的PDF结果文件已经打开，请先关闭PDF文件"
+                else:
+                    msg = "生成的结果文件已经打开，请先关闭相应的文件"
             self.error_trigger.emit(msg)
             self.pdf.create()
 

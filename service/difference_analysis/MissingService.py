@@ -1,6 +1,7 @@
 import pandas as pd
 from util.Logger import logger
 import numpy as np
+from missingpy import MissForest
 
 
 def get_filter_name(df,filter_rate,axis=1):
@@ -115,7 +116,7 @@ def filter_by_n(df,filter_n,groups):
         group_df = df[group]
         group_missing = get_filter_name_by_n(group_df,filter_n)
         # logger.debug(f"group：{group}\n,filter rows lens:{len(group_missing)},\nfilter rows :{group_missing}")
-        logger.debug(f"group：{group}\n,filter rows lens:{len(group_missing)}.")
+        # logger.debug(f"group：{group}\n,filter rows lens:{len(group_missing)}.")
         missing.extend(group_missing)
     # 对missing进行去重
     filter_rows = list(set(missing))
@@ -223,7 +224,7 @@ def forest_missing_filing(df,n_trees=100):
     :param n_trees:
     :return:
     '''
-    from missingpy import MissForest
+
     forestimp = MissForest(n_estimators=n_trees, random_state=123)
     data = forestimp.fit_transform(df)
     result_df = pd.DataFrame(data, index=df.index, columns=df.columns)

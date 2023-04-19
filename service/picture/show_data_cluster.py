@@ -48,15 +48,15 @@ def draw_pca_cluster(df,groups_dict,title,pdf,is_annotate=False,dir_path=None):
         df_T_scale = StandardScaler().fit_transform(df_T)
         # 获取分组标签
         y_dict = {}
-        all_markers =['o',"^","s","v","+"]
-        markers_dict = {}
+        # all_markers =['o',"^","s","v","+","-"]
+        # markers_dict = {}
         keys = list(groups_dict.keys())
         for j in range(len(keys)):
             for k in groups_dict[keys[j]]:
                 y_dict[k] = j
-                markers_dict[k] = all_markers[j]
+                # markers_dict[k] = all_markers[j]
         y = list(itemgetter(*list(df_T.index))(y_dict))
-        markers = list(itemgetter(*list(df_T.index))(markers_dict))
+        # markers = list(itemgetter(*list(df_T.index))(markers_dict))
         model = PCA(n_components=2)
         pca = model.fit_transform(df_T_scale)
         # ratio 主成分方差贡献率

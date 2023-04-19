@@ -26,7 +26,7 @@ def draw_boxplot(df1, pdf,groups_dict=None, title=None, log2=True,dir_path=None)
     new_ticks_font_size = adaptive_font_size(df1.shape[1], ticks_font_size,df1.columns.tolist())
     if log2:
         # 当dataframe中最大值和最小值相差的范围在20以内时不需要进行log2处理l;或者有负值
-        if (df1.max(skipna=True).max() >100 )or (df1 < 0).values.any():
+        if (df1.max(skipna=True).max() <100 )or (df1 < 0).values.any():
             log2=False
     # 取对数处理
     if log2:

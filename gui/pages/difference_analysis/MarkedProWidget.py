@@ -65,7 +65,7 @@ class MarkedProWidget(QWidget):
         dataInputBtn.setStyleSheet("background: #83c5be")
         dataInputBtn.clicked.connect(self.expression_data_import)
         label4 = MyQLabel("下载表达数据",self)
-        label4.connect_customized_slot(lambda: self.saveFile("marked_pro_data.xlsx"))
+        label4.connect_customized_slot(lambda: self.saveFile("label_pro_data.xlsx"))
         label4.setStyleSheet("color:red;text-decoration:underline;")
         hLayout1.addWidget(dataInputBtn)
         hLayout1.addWidget(label4)
@@ -79,7 +79,7 @@ class MarkedProWidget(QWidget):
         informationBtn.clicked.connect(self.information_data_import)
         label5 = MyQLabel("下载样本信息表",self)
         label5.setStyleSheet("color:red;text-decoration:underline;")
-        label5.connect_customized_slot(lambda: self.saveFile("marked_pro_sampleInformation.xlsx"))
+        label5.connect_customized_slot(lambda: self.saveFile("label_pro_sampleInformation.xlsx"))
         label21 = MyQLabel("提示",self)
         label21.setStyleSheet("color:blue;text-decoration:underline;")
         label21.connect_customized_slot(self.hint)
@@ -330,7 +330,7 @@ class MarkedProWidget(QWidget):
         to_file_path, ftype = QFileDialog.getSaveFileName(self, 'save file', exit_file_name, "*."+file_type)
         if to_file_path:
             ResourcePath = gol.get_value("ResourcePath")
-            exit_file_path = os.path.join(ResourcePath, "file","marked_pro",exit_file_name)
+            exit_file_path = os.path.join(ResourcePath, "file","label_pro",exit_file_name)
             t = CopyFileThread(exit_file_path,to_file_path)  # 目标函数
             t.start()  # 启动线程
 
