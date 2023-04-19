@@ -13,23 +13,20 @@ if __name__ == '__main__':
     can_use_r = True
     system_type = platform.system()
     if system_type=="Windows":
-        withR = True
-        if withR:
-            path = "../software/R-4.2.1"
-            if not os.path.exists(path):
-                path = "./R-4.2.1"
-            if os.path.exists(path):
-                os.environ['R_HOME'] =path
-                if "R-4.2.1" not in os.environ['path']:
-                    os.environ["PATH"] = path+"/bin/x64" + ";" + os.environ["PATH"]
-                logger.info(f"R已经配置好，path:{path}")
-            else:
-                logger.info("系统中没有安装R，无法使用关于R的功能")
-                can_use_r=False
+        path = "../software/R-4.2.1"
+        if not os.path.exists(path):
+            path = "./R-4.2.1"
+        if os.path.exists(path):
+            os.environ['R_HOME'] = path
+            if 'R-' not in os.environ['path']:
+                os.environ["PATH"] = path + "/bin/x64" + ";" + os.environ["PATH"]
+            logger.info(f"R已经配置好，path:{path}")
+        if "R-" not in os.environ['path']:
+            logger.info("系统中没有安装R，无法使用关于R的功能")
+            can_use_r = False
         else:
-            if "R-" not in os.environ['path']:
-                logger.info("系统中没有安装R，无法使用关于R的功能")
-                can_use_r=False
+            logger.info("系统中已经安装R，可以使用关于R的功能")
+            can_use_r = True
 
         if "Graphviz" not in os.environ['path']:
             path_graph = "../software/Graphviz/bin"
