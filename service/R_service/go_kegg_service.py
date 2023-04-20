@@ -3,10 +3,18 @@ from util.Logger import logger
 import os
 import util.Global as gol
 from service.R_service.common_service import check_can_use_R
+import re
 
 
-def go_kegg_service(enrichOrgType,enrichGeneType,genes,result_path):
+def go_kegg_service(enrichOrgType,enrichGeneType,pre_genes,result_path):
     check_can_use_R()
+    genes = []
+    for pre_gene in pre_genes:
+        if len(pre_gene) > 0:
+            sub_gene_list = re.split(',|，|;', pre_gene)
+            for sub_gene in sub_gene_list:
+                if len(sub_gene.strip()) > 0:
+                    genes.append(sub_gene)
     # 如果enrichOrgType == "mmu"  enrichGeneType == ”SYMBOL“要确保基因的名称是首字母大写，其他小写的形式
     modified_genes = []
     if enrichGeneType == "SYMBOL" and enrichOrgType == "mmu":
