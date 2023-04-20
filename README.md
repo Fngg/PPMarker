@@ -74,10 +74,10 @@ PPMarker 也支持以上三种操作系统。
 
 - 如果您的系统中已经安装了R语言和相关依赖包，请下载"windows64_PPMarker_without_R.zip"。两种下载方式如下：                
     1. 在本仓库的发行版release中有windows64_PPMarker_without_R.zip文件；        
-    2. 百度网盘下载链接: https://pan.baidu.com/s/1GyP5Kngk_eML94aXRflYAQ?pwd=axt4 提取码: axt4；
+    2. 百度网盘下载链接: https://pan.baidu.com/s/1WYPgCavA2-dbmIiLd2i0uA 提取码: 87fj。
 - 若您的系统中没有安装R语言和相关依赖包，请下载"windows64_PPMarker_with_R.zip",两种下载方式如下：  
-    1. 在本仓库的发行版release中有windows64_PPMarker_without_R.zip文件；          
-    2. 百度网盘下载链接: https://pan.baidu.com/s/1_dRi1xjzRI0Qs7GHyIauMg?pwd=kjs2 提取码: kjs2。          
+    1. 在本仓库的发行版release中有windows64_PPMarker_with_R.zip文件；          
+    2. 百度网盘下载链接: https://pan.baidu.com/s/1VxDSD2FUXL3yvZvVLXZX9g 提取码: k3fb。    
 
 下载后解压缩，点击文件夹中的 PPMarker.exe 文件即可运行。
 
