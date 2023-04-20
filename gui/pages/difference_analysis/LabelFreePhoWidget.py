@@ -6,10 +6,12 @@ from PyQt5.QtCore import Qt
 import os
 import util.Global as gol
 from gui.myqdialogs.AssessmentQDialog import AssessmentQDialog
+from gui.myqdialogs.ChoiceQDialog import ChoiceQDialog
 from gui.mywidgets.MyQLable import MyQLabel
 from gui.workQThead.difference_analysis.LabelFreePhoQThread import LabelFreePhoQThread
 from util.StringUtil import IsFloatNum
 from service.FlowChartService import label_free_pho_flowchart, scale_flowchart_png
+from util.Logger import logger
 
 
 class LabelFreePhoWidget(QWidget):
@@ -76,6 +78,21 @@ class LabelFreePhoWidget(QWidget):
         hLayout2.addWidget(informationBtn)
         hLayout2.addWidget(label5)
         hLayout2.addStretch(1)
+
+        hLayout21 = QHBoxLayout()
+        hLayout21.setSpacing(20)
+        self.geneNameCol = QCheckBox()
+        self.geneNameCol.setText("设置基因名称对应的列")
+        # hLayout8.addWidget(label81)
+        self.geneNameColBtn = QPushButton('基因名列', self, objectName='ClickBtn')
+        self.geneNameColBtn.setStyleSheet("background: #83c5be;max-width: 120px;")
+        self.geneNameColBtn.clicked.connect(self.set_col_name)
+        self.geneNameColBtn.setVisible(False)
+
+        self.geneNameCol.stateChanged.connect(lambda: self.geneNameState(self.geneNameCol))
+        hLayout21.addWidget(self.geneNameCol)
+        hLayout21.addWidget(self.geneNameColBtn)
+        hLayout21.addStretch(1)
 
         hLayout8 = QHBoxLayout()
         hLayout8.setSpacing(20)
@@ -237,6 +254,7 @@ class LabelFreePhoWidget(QWidget):
         vLayout2.addWidget(label3)
         vLayout2.addLayout(hLayout1)
         vLayout2.addLayout(hLayout2)
+        vLayout2.addLayout(hLayout21)
         vLayout2.addLayout(hLayout8)
 
         vLayout2.addWidget(label12)
@@ -288,6 +306,24 @@ class LabelFreePhoWidget(QWidget):
             self.oriQComboBox.setVisible(False)
             self.geneTypeColname.setVisible(False)
 
+    def geneNameState(self, cb):
+        if self.geneNameCol.isChecked():
+            self.geneNameColBtn.setVisible(True)
+        else:
+            self.geneNameColBtn.setVisible(False)
+
+    def set_col_name(self):
+        label_free_pho_expression_path = gol.get_value("label_free_pho_expression_path")
+        if label_free_pho_expression_path:
+            try:
+                choiceQDialog = ChoiceQDialog()
+                choiceQDialog.initUI(self.resultEdit, "label_free_pho_gene_name", "基因名称对应的列", label_free_pho_expression_path)
+                if choiceQDialog.exec_() == QDialog.Accepted:
+                    pass
+            except Exception as e:
+                logger.error(e)
+                logger.error(f"参数label_free_pho_expression_path：{label_free_pho_expression_path}")
+
     def certain(self):
         # 校正
         norm = self.normMethod.currentText()
@@ -337,6 +373,13 @@ class LabelFreePhoWidget(QWidget):
                 enrichGeneType = "ENSEMBL"
             gol.set_value("label_free_pho_org_type", enrichOrgType)
             gol.set_value("label_free_pho_gene_type", enrichGeneType)
+        # 基因名称列
+        if_gene_name = self.geneNameCol.isChecked()
+        gol.set_value("label_free_pho_if_gene_name", if_gene_name)
+        if if_gene_name:
+            if not gol.get_value("label_free_pho_gene_name"):
+                QMessageBox.warning(self, "基因名称列", "请设置基因名称对应的列")
+                return
         # 更新流程图，没有新建线程
         try:
             flowchart_path = label_free_pho_flowchart()

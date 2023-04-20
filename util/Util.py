@@ -28,7 +28,7 @@ def get_group_list(filename):
 
 def get_column_list(file):
     if os.path.exists(file):
-        df = readFile(file,if_zero_na=False)
+        df = readFile(file,if_zero_na=False,index_col=None)
         return df.columns.to_list()
     return []
 

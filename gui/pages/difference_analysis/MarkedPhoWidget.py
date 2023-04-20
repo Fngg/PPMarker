@@ -5,6 +5,7 @@ from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QGraphicsPixmapIt
 from PyQt5.QtCore import Qt
 import os
 import util.Global as gol
+from gui.myqdialogs.ChoiceQDialog import ChoiceQDialog
 from gui.myqdialogs.HintQDialog import HintQDialog
 from gui.myqdialogs.MarkedGroupQDialog import MarkedGroupQDialog
 from gui.mywidgets.MyQLable import MyQLabel
@@ -82,6 +83,21 @@ class MarkedPhoWidget(QWidget):
         hLayout2.addWidget(label5)
         hLayout2.addWidget(label21)
         hLayout2.addStretch(1)
+
+        hLayout21 = QHBoxLayout()
+        hLayout21.setSpacing(20)
+        self.geneNameCol = QCheckBox()
+        self.geneNameCol.setText("设置基因名称对应的列")
+        # hLayout8.addWidget(label81)
+        self.geneNameColBtn = QPushButton('基因名列', self, objectName='ClickBtn')
+        self.geneNameColBtn.setStyleSheet("background: #83c5be;max-width: 120px;")
+        self.geneNameColBtn.clicked.connect(self.set_col_name)
+        self.geneNameColBtn.setVisible(False)
+
+        self.geneNameCol.stateChanged.connect(lambda: self.geneNameState(self.geneNameCol))
+        hLayout21.addWidget(self.geneNameCol)
+        hLayout21.addWidget(self.geneNameColBtn)
+        hLayout21.addStretch(1)
 
         hLayout8 = QHBoxLayout()
         hLayout8.setSpacing(20)
@@ -245,6 +261,7 @@ class MarkedPhoWidget(QWidget):
         vLayout2.addWidget(label3)
         vLayout2.addLayout(hLayout1)
         vLayout2.addLayout(hLayout2)
+        vLayout2.addLayout(hLayout21)
         vLayout2.addLayout(hLayout8)
 
         vLayout2.addWidget(label12)
@@ -268,6 +285,24 @@ class MarkedPhoWidget(QWidget):
 
         layout.addLayout(vLayout1,stretch=6)
         layout.addLayout(vLayout2,stretch=4)
+    
+    def geneNameState(self, cb):
+        if self.geneNameCol.isChecked():
+            self.geneNameColBtn.setVisible(True)
+        else:
+            self.geneNameColBtn.setVisible(False)
+
+    def set_col_name(self):
+        marked_pho_expression_path = gol.get_value("marked_pho_expression_path")
+        if marked_pho_expression_path:
+            try:
+                choiceQDialog = ChoiceQDialog()
+                choiceQDialog.initUI(self.resultEdit, "marked_pho_gene_name", "基因名称对应的列", marked_pho_expression_path)
+                if choiceQDialog.exec_() == QDialog.Accepted:
+                    pass
+            except Exception as e:
+                logger.error(e)
+                logger.error(f"参数marked_pho_expression_path：{marked_pho_expression_path}")
 
     def choice_filter_select_change(self,tag):
         # 选择不同的过滤规则时出现不同的过滤条件
@@ -346,6 +381,14 @@ class MarkedPhoWidget(QWidget):
             gol.set_value("marked_pho_org_type", enrichOrgType)
             gol.set_value("marked_pho_gene_type", enrichGeneType)
 
+        # 基因名称列
+        if_gene_name = self.geneNameCol.isChecked()
+        gol.set_value("marked_pho_if_gene_name", if_gene_name)
+        if if_gene_name:
+            if not gol.get_value("marked_pho_gene_name"):
+                QMessageBox.warning(self, "基因名称列", "请设置基因名称对应的列")
+                return
+        
         # 更新流程图，没有新建线程
         try:
             flowchart_path = marked_pho_flowchart()

@@ -2,12 +2,13 @@ from math import isclose
 from PyQt5.QtGui import QPixmap
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QGraphicsPixmapItem, QGraphicsScene, QGraphicsView, \
     QTextEdit, QLabel, QPushButton, QComboBox, QSpinBox, QLineEdit, QMessageBox, QFileDialog, QDialog, \
-    QScrollArea
+    QScrollArea, QCheckBox
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QDoubleValidator
 import os
 import util.Global as gol
 from gui.myqdialogs.AssessmentQDialog import AssessmentQDialog
+from gui.myqdialogs.ChoiceQDialog import ChoiceQDialog
 from gui.mywidgets.MyQLable import MyQLabel
 from gui.workQThead.UtilThread import CopyFileThread
 from gui.workQThead.biomarker_analysis.BiomarkerLabelFreeQThread import BiomarkerLabelFreeQThread
@@ -86,6 +87,21 @@ class BiomarkerLabelFreeWidget(QWidget):
         hLayout2.addWidget(label5)
         hLayout2.addStretch(1)
 
+        hLayout21 = QHBoxLayout()
+        hLayout21.setSpacing(20)
+        self.geneNameCol = QCheckBox()
+        self.geneNameCol.setText("设置基因名称对应的列")
+        # hLayout8.addWidget(label81)
+        self.geneNameColBtn = QPushButton('基因名列', self, objectName='ClickBtn')
+        self.geneNameColBtn.setStyleSheet("background: #83c5be;max-width: 120px;")
+        self.geneNameColBtn.clicked.connect(self.set_col_name)
+        self.geneNameColBtn.setVisible(False)
+
+        self.geneNameCol.stateChanged.connect(lambda: self.geneNameState(self.geneNameCol))
+        hLayout21.addWidget(self.geneNameCol)
+        hLayout21.addWidget(self.geneNameColBtn)
+        hLayout21.addStretch(1)
+
         label5a =  QLabel("设置阴性和阳性分析", self)
         label5a.setStyleSheet("font-weight:bold")
 
@@ -127,6 +143,21 @@ class BiomarkerLabelFreeWidget(QWidget):
         hLayout3b.addWidget(testInformationBtn)
         hLayout3b.addWidget(label6ba2)
         hLayout3b.addStretch(1)
+
+        hLayout31 = QHBoxLayout()
+        hLayout31.setSpacing(20)
+        self.newGeneNameCol = QCheckBox()
+        self.newGeneNameCol.setText("设置基因名称对应的列")
+        # hLayout8.addWidget(label81)
+        self.newGeneNameColBtn = QPushButton('基因名列', self, objectName='ClickBtn')
+        self.newGeneNameColBtn.setStyleSheet("background: #83c5be;max-width: 120px;")
+        self.newGeneNameColBtn.clicked.connect(self.set_new_col_name)
+        self.newGeneNameColBtn.setVisible(False)
+
+        self.newGeneNameCol.stateChanged.connect(lambda: self.newGeneNameState(self.newGeneNameCol))
+        hLayout31.addWidget(self.newGeneNameCol)
+        hLayout31.addWidget(self.newGeneNameColBtn)
+        hLayout31.addStretch(1)
 
         label6 =  QLabel("设置预处理流程中参数", self)
         label6.setStyleSheet("font-weight:bold")
@@ -320,11 +351,13 @@ class BiomarkerLabelFreeWidget(QWidget):
         vLayout2.addWidget(label3)
         vLayout2.addLayout(hLayout1)
         vLayout2.addLayout(hLayout2)
+        vLayout2.addLayout(hLayout21)
 
         vLayout2.addWidget(label6b)
         vLayout2.addWidget(label6ba)
         vLayout2.addLayout(hLayout2a)
         vLayout2.addLayout(hLayout3b)
+        vLayout2.addLayout(hLayout31)
 
         vLayout2.addWidget(label5a)
         vLayout2.addWidget(groupBtn)
@@ -364,6 +397,42 @@ class BiomarkerLabelFreeWidget(QWidget):
         layout.addLayout(vLayout1,stretch=6)
         # layout.addLayout(vLayout2,stretch=4)
         layout.addWidget(self.scrollArea,stretch=4)
+
+    def geneNameState(self, cb):
+        if self.geneNameCol.isChecked():
+            self.geneNameColBtn.setVisible(True)
+        else:
+            self.geneNameColBtn.setVisible(False)
+
+    def newGeneNameState(self, cb):
+        if self.newGeneNameCol.isChecked():
+            self.newGeneNameColBtn.setVisible(True)
+        else:
+            self.newGeneNameColBtn.setVisible(False)
+
+    def set_col_name(self):
+        biomarker_label_free_expression_path = gol.get_value("biomarker_label_free_expression_path")
+        if biomarker_label_free_expression_path:
+            try:
+                choiceQDialog = ChoiceQDialog()
+                choiceQDialog.initUI(self.resultEdit, "biomarker_label_free_gene_name", "基因名称对应的列", biomarker_label_free_expression_path)
+                if choiceQDialog.exec_() == QDialog.Accepted:
+                    pass
+            except Exception as e:
+                logger.error(e)
+                logger.error(f"参数biomarker_label_free_expression_path：{biomarker_label_free_expression_path}")
+
+    def set_new_col_name(self):
+        biomarker_label_free_test_expression_path = gol.get_value("biomarker_label_free_test_data_path")
+        if biomarker_label_free_test_expression_path:
+            try:
+                choiceQDialog = ChoiceQDialog()
+                choiceQDialog.initUI(self.resultEdit, "biomarker_label_free_test_gene_name", "基因名称对应的列", biomarker_label_free_test_expression_path)
+                if choiceQDialog.exec_() == QDialog.Accepted:
+                    pass
+            except Exception as e:
+                logger.error(e)
+                logger.error(f"参数biomarker_label_free_test_expression_path：{biomarker_label_free_test_expression_path}")
 
     def choice_filter_select_change(self,tag):
         # 选择不同的过滤规则时出现不同的过滤条件
@@ -472,6 +541,19 @@ class BiomarkerLabelFreeWidget(QWidget):
         gol.set_value("biomarker_label_free_train_ratio",train_ratio)
         gol.set_value("biomarker_label_free_test_ratio",test_ratio)
         gol.set_value("biomarker_label_free_verification_ratio",verification_ratio)
+        # 基因名称列
+        if_gene_name = self.geneNameCol.isChecked()
+        gol.set_value("biomarker_label_free_if_gene_name", if_gene_name)
+        if if_gene_name:
+            if not gol.get_value("biomarker_label_free_gene_name"):
+                QMessageBox.warning(self, "基因名称列", "请设置基因名称对应的列")
+                return
+        test_if_gene_name = self.newGeneNameCol.isChecked()
+        gol.set_value("biomarker_label_free_test_if_gene_name", test_if_gene_name)
+        if test_if_gene_name:
+            if not gol.get_value("biomarker_label_free_test_gene_name"):
+                QMessageBox.warning(self, "基因名称列", "请设置基因名称对应的列")
+                return
         # 更新流程图，没有新建线程
         try:
             flowchart_path = biomarker_label_free_flowchart()
@@ -548,6 +630,7 @@ class BiomarkerLabelFreeWidget(QWidget):
 
     def clear_test_data(self):
         fileName = gol.remove_value("biomarker_label_free_test_data_path")
-        self.resultEdit.append(".删除新的测试数据集：" + fileName)
+        if len(fileName)>0:
+            self.resultEdit.append(".删除新的测试数据集：" + fileName)
         self.testRatio.setDisabled(False)
 

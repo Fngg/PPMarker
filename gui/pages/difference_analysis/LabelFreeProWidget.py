@@ -4,6 +4,7 @@ from PyQt5.QtCore import Qt
 import os
 import util.Global as gol
 from gui.myqdialogs.AssessmentQDialog import AssessmentQDialog
+from gui.myqdialogs.ChoiceQDialog import ChoiceQDialog
 from gui.myqdialogs.CorrelationQDialog import CorrelationQDialog
 from gui.mywidgets.MyQLable import MyQLabel
 from gui.workQThead.UtilThread import CopyFileThread
@@ -81,6 +82,21 @@ class LabelFreeProWidget(QWidget):
         hLayout2.addWidget(informationBtn)
         hLayout2.addWidget(label5)
         hLayout2.addStretch(1)
+
+        hLayout21 = QHBoxLayout()
+        hLayout21.setSpacing(20)
+        self.geneNameCol = QCheckBox()
+        self.geneNameCol.setText("设置基因名称对应的列")
+        # hLayout8.addWidget(label81)
+        self.geneNameColBtn = QPushButton('基因名列', self, objectName='ClickBtn')
+        self.geneNameColBtn.setStyleSheet("background: #83c5be;max-width: 120px;")
+        self.geneNameColBtn.clicked.connect(self.set_col_name)
+        self.geneNameColBtn.setVisible(False)
+
+        self.geneNameCol.stateChanged.connect(lambda: self.geneNameState(self.geneNameCol))
+        hLayout21.addWidget(self.geneNameCol)
+        hLayout21.addWidget(self.geneNameColBtn)
+        hLayout21.addStretch(1)
 
         label12 =  QLabel("设置阴性和阳性分析", self)
         label12.setStyleSheet("font-weight:bold")
@@ -246,6 +262,7 @@ class LabelFreeProWidget(QWidget):
         vLayout2.addWidget(label3)
         vLayout2.addLayout(hLayout1)
         vLayout2.addLayout(hLayout2)
+        vLayout2.addLayout(hLayout21)
 
         vLayout2.addWidget(label12)
         vLayout2.addWidget(groupBtn)
@@ -270,6 +287,23 @@ class LabelFreeProWidget(QWidget):
         layout.addLayout(vLayout1,stretch=6)
         layout.addLayout(vLayout2,stretch=4)
 
+    def geneNameState(self, cb):
+        if self.geneNameCol.isChecked():
+            self.geneNameColBtn.setVisible(True)
+        else:
+            self.geneNameColBtn.setVisible(False)
+
+    def set_col_name(self):
+        label_free_pro_expression_path = gol.get_value("label_free_pro_expression_path")
+        if label_free_pro_expression_path:
+            try:
+                choiceQDialog = ChoiceQDialog()
+                choiceQDialog.initUI(self.resultEdit, "label_free_pro_gene_name", "基因名称对应的列", label_free_pro_expression_path)
+                if choiceQDialog.exec_() == QDialog.Accepted:
+                    pass
+            except Exception as e:
+                logger.error(e)
+                logger.error(f"参数label_free_pro_expression_path：{label_free_pro_expression_path}")
     def choice_filter_select_change(self,tag):
         # 选择不同的过滤规则时出现不同的过滤条件
         if tag==0:
@@ -301,6 +335,7 @@ class LabelFreeProWidget(QWidget):
                     QMessageBox.warning(self, "发生错误", "配对样本数量不一致")
             except Exception as e:
                 logger.error(e)
+
     def btnstate(self,cb):
         if self.cb.isChecked():
             self.correlationBtn.setVisible(True)
@@ -383,7 +418,13 @@ class LabelFreeProWidget(QWidget):
                 enrichGeneType = "ENSEMBL"
             gol.set_value("label_free_pro_org_type", enrichOrgType)
             gol.set_value("label_free_pro_gene_type", enrichGeneType)
-
+        # 基因名称列
+        if_gene_name = self.geneNameCol.isChecked()
+        gol.set_value("label_free_pro_if_gene_name", if_gene_name)
+        if if_gene_name:
+            if not gol.get_value("label_free_pro_gene_name"):
+                QMessageBox.warning(self, "基因名称列", "请设置基因名称对应的列")
+                return
         # 更新流程图，没有新建线程
         try:
             flowchart_path = label_free_pro_flowchart()

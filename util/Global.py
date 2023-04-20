@@ -24,3 +24,5 @@ def get_value(key, defValue=None):
 def remove_value(key):
     if _global_dict.__contains__(key):
         return _global_dict.pop(key)
+    else:
+        return ""

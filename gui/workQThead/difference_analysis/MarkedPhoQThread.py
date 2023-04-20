@@ -80,7 +80,12 @@ class MarkedPhoQThread(QThread):
         marked_pho_information_path = gol.get_value("marked_pho_information_path")
         marked_pho_prodata_path = gol.get_value("marked_pho_prodata_path")
         marked_pho_result_path = gol.get_value("marked_pho_result_path")
-        if_enrich = gol.get_value("label_free_pho_if_enrich")
+        if_enrich = gol.get_value("marked_pho_if_enrich")
+        if_gene_name = gol.get_value("marked_pho_if_gene_name")
+        if if_gene_name:
+            gene_col_name = gol.get_value("marked_pho_gene_name")
+        else:
+            gene_col_name = "Gene names"
         # pdf记录分析过程
         pdf_path = os.path.join(marked_pho_result_path, "readme.pdf")
         self.pdf = ResultPdf(pdf_path, "标记定量磷酸化组学数据分析结果")
@@ -102,9 +107,9 @@ class MarkedPhoQThread(QThread):
         # 针对PD的数据，需要从 Description 列中提取 ”Gene names“
         expression_df = extract_gene_name(expression_df)
         # 修改表达数据的行名与列名
-        if "Gene names" in expression_df.columns:
-            expression_df["Gene names"].fillna("", inplace=True)
-            expression_df.index = expression_df.apply(lambda row:  str(row["Gene names"]) + "_" + str(row.name), axis=1)
+        if gene_col_name in expression_df.columns:
+            expression_df[gene_col_name].fillna("", inplace=True)
+            expression_df.index = expression_df.apply(lambda row:  str(row[gene_col_name]) + "_" + str(row.name), axis=1)
             expression_df.index.name = "Gene names_No."
         else:
             expression_df.index.name = "No."

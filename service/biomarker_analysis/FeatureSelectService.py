@@ -180,9 +180,9 @@ def get_final_features(df,max_feature_num,feature_fuc_name):
     col = df[feature_fuc_name]
     feature_names = get_top_features(col, max_feature_num)
     if "DEP" in df.columns:
-        final_features_df = df.loc[(df.index.isin(feature_names)) & (df["DEP"] != "none-significant"),feature_fuc_name].to_frame()
+        final_features_df = df.loc[(df.index.isin(feature_names)) & (df["DEP"] != "none-significant"),:]
     else:
-        final_features_df = df.loc[df.index.isin(feature_names),feature_fuc_name].to_frame()
+        final_features_df = df.loc[df.index.isin(feature_names),:]
     return final_features_df,final_features_df.index.tolist()
 
 

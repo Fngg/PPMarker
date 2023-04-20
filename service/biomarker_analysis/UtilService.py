@@ -30,7 +30,7 @@ def create_result_dir(result_path):
         os.makedirs(folder4)
 
 
-def handle_test_data(test_data_path,test_information_path,result_path,dirname,ngroup,pgroup,final_select_proteins,qcgroup=None,log2=True):
+def handle_test_data(test_data_path,test_information_path,result_path,dirname,ngroup,pgroup,final_select_proteins,qcgroup=None,log2=True,gene_col_name="Gene names"):
     '''
     处理新的测试集数据：缺失值填值
     '''
@@ -46,11 +46,11 @@ def handle_test_data(test_data_path,test_information_path,result_path,dirname,ng
     if not result:
         return None,despri
     test_data_df = extract_gene_name(test_data_df)
-    if "Gene names" not in test_data_df.columns:
+    if gene_col_name not in test_data_df.columns:
         return None,"导入的新的测试集数据中没有Gene names列"
-    test_data_df["Gene names"].fillna("", inplace=True)
-    test_data_df.drop_duplicates(subset="Gene names",keep='first',inplace=True)
-    test_data_df.index = test_data_df["Gene names"]
+    test_data_df[gene_col_name].fillna("", inplace=True)
+    test_data_df.drop_duplicates(subset=gene_col_name,keep='first',inplace=True)
+    test_data_df.index = test_data_df[gene_col_name]
 
     # 确定下生物标志物蛋白在新的数据集中是否全部都有
     final_select_proteins_test = []

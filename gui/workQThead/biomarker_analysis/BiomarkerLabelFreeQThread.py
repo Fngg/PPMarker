@@ -164,8 +164,8 @@ class BiomarkerLabelFreeQThread(QThread):
 
             feature_select_plot(feature_select_result, difference_analysis_data, groups_dict, groups, pdf,dir_path=dir_path)
             final_select_proteins_import_df,final_select_proteins =get_final_features(difference_analysis_model_df, max_feature_num, "lasso")
-            export_data(final_select_proteins_import_df, result_path, biomarker_feature_select_dirname,
-                        "final_features.xlsx", "final_features")
+            # export_data(final_select_proteins_import_df, result_path, biomarker_feature_select_dirname,
+            #             "final_features.xlsx", "final_features")
             final_select_proteins_import_df.rename(columns={"lasso":"feature_importance"}, inplace=True)
         elif feature_select_index==2:
             # 差异分析 + 随机森林特征筛选
@@ -178,8 +178,8 @@ class BiomarkerLabelFreeQThread(QThread):
             feature_select_plot(feature_select_result, difference_analysis_data, groups_dict, groups, pdf,dir_path=dir_path)
             final_select_proteins_import_df, final_select_proteins = get_final_features(difference_analysis_model_df, max_feature_num,
                                                                           "RF")
-            export_data(final_select_proteins_import_df, result_path, biomarker_feature_select_dirname,
-                        "final_features.xlsx", "final_features")
+            # export_data(final_select_proteins_import_df, result_path, biomarker_feature_select_dirname,
+            #             "final_features.xlsx", "final_features")
             final_select_proteins_import_df.rename(columns={"RF": "feature_importance"}, inplace=True)
         elif feature_select_index==3:
             # 差异分析 + 递归特征消除法
@@ -192,8 +192,8 @@ class BiomarkerLabelFreeQThread(QThread):
             feature_select_plot(feature_select_result, difference_analysis_data, groups_dict, groups, pdf,dir_path=dir_path)
             final_select_proteins_import_df, final_select_proteins = get_final_features(difference_analysis_model_df, max_feature_num,
                                                                           "RFE")
-            export_data(final_select_proteins_import_df, result_path, biomarker_feature_select_dirname,
-                        "final_features.xlsx", "final_features")
+            # export_data(final_select_proteins_import_df, result_path, biomarker_feature_select_dirname,
+            #             "final_features.xlsx", "final_features")
             final_select_proteins_import_df.rename(columns={"RFE": "feature_importance"}, inplace=True)
         elif feature_select_index==4:
             # 差异分析 + 岭回归特征筛选
@@ -206,8 +206,8 @@ class BiomarkerLabelFreeQThread(QThread):
             feature_select_plot(feature_select_result, difference_analysis_data, groups_dict, groups, pdf,dir_path=dir_path)
             final_select_proteins_import_df, final_select_proteins = get_final_features(difference_analysis_model_df, max_feature_num,
                                                                           "l2")
-            export_data(final_select_proteins_import_df, result_path, biomarker_feature_select_dirname,
-                        "final_features.xlsx", "final_features")
+            # export_data(final_select_proteins_import_df, result_path, biomarker_feature_select_dirname,
+            #             "final_features.xlsx", "final_features")
             final_select_proteins_import_df.rename(columns={"l2": "feature_importance"}, inplace=True)
         # elif feature_select_index==5:
         #     feature_select_result = feature_select(X_train_prepared, y_train, list(X_train_prepared.columns), max_feature_num,
@@ -245,6 +245,11 @@ class BiomarkerLabelFreeQThread(QThread):
         biomarker_label_free_expression_path = gol.get_value("biomarker_label_free_expression_path")
         biomarker_label_free_information_path = gol.get_value("biomarker_label_free_information_path")
         biomarker_label_free_result_path = gol.get_value("biomarker_label_free_result_path")
+        if_gene_name = gol.get_value("biomarker_label_free_if_gene_name")
+        if if_gene_name:
+            gene_col_name = gol.get_value("biomarker_label_free_gene_name")
+        else:
+            gene_col_name = "Gene names"
         # pdf记录分析过程
         pdf_path = os.path.join(biomarker_label_free_result_path, "readme.pdf")
         self.pdf = ResultPdf(pdf_path, "无标记定量蛋白质组学数据生物标志物分析结果")
@@ -265,13 +270,13 @@ class BiomarkerLabelFreeQThread(QThread):
         expression_df = extract_gene_name(expression_df)
         if_applicable_newdata= True # 如果需要使用新的独立数据集做为测试集需要原始数据集种包含Gene names
         # 修改表达数据的行名与列名
-        if "Gene names" in expression_df.columns:
-            # expression_df["Gene names"].fillna("", inplace=True)
-            na_gene_num = expression_df["Gene names"].isnull().sum()
+        if gene_col_name in expression_df.columns:
+            # expression_df[gene_col_name].fillna("", inplace=True)
+            na_gene_num = expression_df[gene_col_name].isnull().sum()
             if na_gene_num>0:
-                expression_df.dropna(axis=0, subset=["Gene names"], inplace=True)
-                self.info_record("删除基因名缺失的蛋白", "我们删除了"+str(na_gene_num)+"个基因名缺失('Gene names'列为空值)的蛋白.")
-            expression_df.index = expression_df.apply(lambda row: str(row["Gene names"]) + "_" + str(row.name), axis=1)
+                expression_df.dropna(axis=0, subset=[gene_col_name], inplace=True)
+                self.info_record("删除基因名缺失的蛋白", "我们删除了"+str(na_gene_num)+"个基因名缺失('"+gene_col_name+"'列为空值)的蛋白.")
+            expression_df.index = expression_df.apply(lambda row: str(row[gene_col_name]) + "_" + str(row.name), axis=1)
             expression_df.index.name = "Gene names_No."
         else:
             expression_df.index.name = "No."
@@ -401,8 +406,13 @@ class BiomarkerLabelFreeQThread(QThread):
         test_information_path = gol.get_value("biomarker_label_free_test_information_path")
         if test_data_path is not None and test_information_path is not None:
             if if_applicable_newdata:
+                new_if_gene_name = gol.get_value("biomarker_label_free_test_if_gene_name")
+                if new_if_gene_name:
+                    new_gene_col_name = gol.get_value("biomarker_label_free_test_gene_name")
+                else:
+                    new_gene_col_name = "Gene names"
                 test_result,despri = handle_test_data(test_data_path, test_information_path, biomarker_label_free_result_path, biomarker_data_split_dirname,
-                                 ngroup, pgroup, final_select_proteins)
+                                 ngroup, pgroup, final_select_proteins,gene_col_name=new_gene_col_name)
                 if test_result is None:
                     self.info_record("新的测试集数据无法使用：", despri)
                 else:
@@ -417,6 +427,12 @@ class BiomarkerLabelFreeQThread(QThread):
 
             else:
                 self.info_record("新的测试集数据无法使用", "原始数据与新的测试集数据的基因无法对应，两个数据集中都应该有'Gene names'列。")
+
+        final_select_proteins_import_df = select_proteins_import_df.loc[final_select_proteins, :]
+        final_select_proteins_import_df.index.name = complement_expression_df.index.name
+        export_data(final_select_proteins_import_df, biomarker_label_free_result_path, biomarker_feature_select_dirname,
+                    "final_features.xlsx", "final_features", complement_expression_df.loc[final_select_proteins, :])
+
         if test_set is not None:
             X_test = test_set.drop("class", axis=1)
             y_test = test_set["class"].copy()
